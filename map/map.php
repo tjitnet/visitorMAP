@@ -31,10 +31,10 @@ function map_add($ifcdn = false, $server_ip_arr = null, $server_ip = "", $API_ke
 
     $use_ip = Get_User_ip();
     if (strpos($put_data, $use_ip) === false) {
-        $data = map_curl_get($API_key, $use_ip);
-        $arr = json_decode($data, true);
-        $lat = $arr["data"]["result"]["location"]["lat"];
-        $lng = $arr["data"]["result"]["location"]["lng"];
+        $res = map_curl_get($API_key, $use_ip);
+        $arr = json_decode($res, true);
+        $lat = $arr["data"]["info"]["lat"];
+        $lng = $arr["data"]["info"]["lng"];
     } else {
         return '用户数据已存在';
     }
@@ -43,10 +43,10 @@ function map_add($ifcdn = false, $server_ip_arr = null, $server_ip = "", $API_ke
     if ($ifcdn == true and $cdn_ip != $server_ip) {
         $server_ip = $cdn_ip;
         if (strpos($put_data, $cdn_ip) === false) {
-            $data = map_curl_get($API_key, $cdn_ip);
-            $arr = json_decode($data, true);
-            $to_lat = $arr["data"]["result"]["location"]["lat"];
-            $to_lng = $arr["data"]["result"]["location"]["lng"];
+            $res = map_curl_get($API_key, $cdn_ip);
+            $arr = json_decode($res, true);
+            $to_lat = $arr["data"]["info"]["lat"];
+            $to_lng = $arr["data"]["info"]["lng"];
         } else {
             $arr = map_obg_data($put_data, $cdn_ip);
             $to_lat = $arr["to"]["lat"];
@@ -86,7 +86,7 @@ function map_add($ifcdn = false, $server_ip_arr = null, $server_ip = "", $API_ke
 
 function map_curl_get($Api_key, $ip)
 {
-    $url = "https://api88.net/ips?key={$Api_key}&ip=" . $ip;
+    $url = "https://api88.net/api/ipv2/query?key={$Api_key}&ip=" . $ip;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
